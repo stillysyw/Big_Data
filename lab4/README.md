@@ -79,3 +79,69 @@
 
 
 
+### Philosophers
+
+Результат:
+```
+Philosopher 0 is going to eat
+Philosopher 4 is going to eat
+Philosopher 1 is going to eat
+Philosopher 2 is going to eat
+Philosopher 3 is going to eat
+Philosopher 2 takes left fork
+Philosopher 2 takes right fork
+Philosopher 5 takes left fork
+Philosopher 5 takes right fork
+Philosopher 4 takes left fork
+Philosopher 5 puts right fork
+Philosopher 5 puts left fork 
+Philosopher 4 takes right fork
+Philosopher 5 is thinking
+Philosopher 1 takes left fork
+Philosopher 2 puts right fork
+Philosopher 2 puts left fork 
+Philosopher 1 takes right fork
+Philosopher 3 takes left fork
+Philosopher 2 is thinking
+Philosopher 4 puts right fork
+Philosopher 1 puts right fork
+Philosopher 1 puts left fork 
+Philosopher 4 puts left fork 
+Philosopher 3 takes right fork
+Philosopher 1 is thinking
+Philosopher 4 is thinking
+Philosopher 4 is going to eat
+Philosopher 5 takes left fork
+Philosopher 5 takes right fork
+Philosopher 1 is going to eat
+Philosopher 2 takes left fork
+Philosopher 5 puts right fork
+Philosopher 5 puts left fork 
+Philosopher 1 takes left fork
+Philosopher 5 is thinking
+Philosopher 3 is going to eat
+Philosopher 3 puts right fork
+Philosopher 3 puts left fork
+Philosopher 2 takes right fork
+Philosopher 3 is thinking
+Philosopher 4 takes left fork
+Philosopher 4 takes right fork
+Philosopher 2 puts right fork
+Philosopher 2 puts left fork
+Philosopher 1 takes right fork
+Philosopher 2 is thinking
+Philosopher 2 is going to eat
+Philosopher 3 takes left fork
+Philosopher 1 puts right fork
+Philosopher 1 puts left fork
+Philosopher 1 is thinking
+Philosopher 4 puts right fork
+Philosopher 4 puts left fork
+Philosopher 3 takes right fork
+Philosopher 4 is thinking
+Philosopher 3 puts right fork
+Philosopher 3 puts left fork
+Philosopher 3 is thinking
+```
+## Двуфазный коммит протокол для high-available регистра
+Координатор уведомляет исполнителей (client) о начале транзакции. После этого координатор устанавливает слежение (WATCH) на путь /app/tx для отслеживания изменений транзакционного узла. Каждый исполнитель создает временный узел /app/tx/node_i, в котором содержится решение о том, следует ли выполнить (commit) или отменить (abort) транзакцию. Затем исполнитель подписывается на события, связанные с его узлом, и ожидает решения от координатора на втором этапе. На этом этапе координатор принимает окончательное решение (основанное на большинстве голосов) о том, следует ли подтвердить (commit) или отклонить (abort) транзакцию. Это решение принимается после ожидания таймаута или создания всех временных узлов исполнителей с решением commit. Затем координатор обновляет значения временных узлов каждого исполнителя на commit или abort. Исполнители, в зависимости от принятого решения, либо выполняют, либо отменяют транзакцию, а затем обновляют значение узла до статуса committed.
